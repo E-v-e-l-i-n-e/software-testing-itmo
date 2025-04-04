@@ -2,12 +2,12 @@ import Task3.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Task3Test {
 
@@ -25,12 +25,12 @@ public class Task3Test {
     Crew crew = new Crew(crewMembers, law, spaceship);
 
     List<Atom> atoms = Arrays.asList(
-            new Atom("Водород"),
-            new Atom("Кислород"),
-            new Atom("Водород")
+            new Atom("Водород", 2.0),
+            new Atom("Кислород", 16.0),
+            new Atom("Водород", 2.0)
     );
 
-    Molecule water = new Molecule(atoms);
+    Molecule water = new Molecule(atoms, 100.0);
 
     @Test
     @DisplayName("testSpaceshipCreation")
@@ -59,17 +59,17 @@ public class Task3Test {
     @Test
     @DisplayName("atomTest")
     void atomCreation() {
-        Atom atom = new Atom("Водород");
+        Atom atom = new Atom("Водород", 2.0);
         assertEquals("Водород", atom.getSubstance());
         assertThrows(IllegalArgumentException.class,
-                () -> new Atom(null),
+                () -> new Atom(null, 2.0),
                 "Вещество атома не может быть null");
 
         assertThrows(IllegalArgumentException.class,
-                () -> new Atom(""),
+                () -> new Atom("", 2.0),
                 "Вещество атома не может быть пустым");
         assertThrows(IllegalArgumentException.class,
-                () -> new Atom("   "),
+                () -> new Atom("   ", 2.0),
                 "Вещество атома не может быть пустым");
     }
 
@@ -80,28 +80,52 @@ public class Task3Test {
     void moleculeCreation() {
         assertEquals(3, water.getAtoms().size());
         assertThrows(IllegalArgumentException.class,
-                () -> new Molecule(null),
+                () -> new Molecule(null, 2.0),
                 "Список атомов не может быть null");
 
         assertThrows(IllegalArgumentException.class,
-                () -> new Molecule(Collections.emptyList()),
+                () -> new Molecule(Collections.emptyList(), 100.0),
                 "Молекула не может быть без атомов");
 
         List<Atom> atoms = Arrays.asList(
-                new Atom("Водород"),
+                new Atom("Водород", 2.0),
                 null,
-                new Atom("Кислород"));
+                new Atom("Кислород", 16.0));
 
         assertThrows(IllegalArgumentException.class,
-                () -> new Molecule(atoms),
+                () -> new Molecule(atoms, 100.0),
                 "Атом в списке не может быть null");
 
+
         List<Atom> atom = Arrays.asList(
-                new Atom("Углерод"),
-                new Atom("Кислород")
+                new Atom("Углерод", 32.0),
+                new Atom("Кислород", 16.0)
         );
-        Molecule molecule = new Molecule(atom);
+        Molecule molecule = new Molecule(atom, 100.0);
         assertEquals("Молекула состоит из 2 атомов", molecule.getStructure());
+
+        List<Atom> exactWeightAtoms = new ArrayList<>();
+        exactWeightAtoms.add(new Atom("Fe", 100.0));
+
+        assertDoesNotThrow(() -> new Molecule(exactWeightAtoms, 100.0));
+
+        exactWeightAtoms.add(new Atom("Fe", 10.0));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Molecule(exactWeightAtoms, 100.0),
+                "Масса молекулы не может превышать максимальный вес");
+
+        List<Atom> slightlyHeavyAtoms = List.of(new Atom("Fe", 100.01));
+        assertThrows(IllegalArgumentException.class,
+                () -> new Molecule(slightlyHeavyAtoms, 100.0),
+                "Масса молекулы не может превышать максимальный вес");
+
+        assertThrows(IllegalArgumentException.class,
+                () -> new Molecule(atoms, null),
+                "Максимальный вес молекулы не может быть пустым или равен бесконечности");
+
+        assertThrows(IllegalArgumentException.class,
+                () -> new Molecule(atoms, Double.POSITIVE_INFINITY),
+                "Максимальный вес молекулы не может быть пустям или или равен бесконечности");
     }
 
 

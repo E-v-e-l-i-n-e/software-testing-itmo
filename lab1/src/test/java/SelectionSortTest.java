@@ -5,6 +5,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -64,6 +65,37 @@ class SelectionSortTest {
         assertIterableEquals(expected, result);
     }
 
+
+    @Test
+    @DisplayName("Тест первой итерации сортировки")
+    void testFirstIteration() {
+        List<Integer> input = List.of(4, 3, 2, 1);
+        List<Integer> expected = List.of(1, 3, 2, 4);
+        List<Integer> result = SelectionSort.firstIteration(input);
+        assertIterableEquals(expected, result, "Первая итерация сортировки возвращает неверное состояние массива");
+    }
+
+    @Test
+    @DisplayName("Тест первой итерации для пустого списка")
+    void testFirstIterationEmptyList() {
+        List<Integer> input = List.of();
+        List<Integer> expected = List.of();
+        List<Integer> result = SelectionSort.firstIteration(input);
+        assertIterableEquals(expected, result, "Первая итерация сортировки возвращает неверное состояние массива для пустого списка");
+    }
+
+    @Test
+    @DisplayName("Тест первой итерации с одним элементом")
+    void testFirstIterationSingleElement() {
+        List<Integer> input = List.of(42);
+        List<Integer> expected = List.of(42);
+        List<Integer> result = SelectionSort.firstIteration(input);
+        assertIterableEquals(expected, result, "Первая итерация сортировки возвращает неверное состояние массива для списка с одним элементом");
+    }
+
+
+
+
     static Stream<Arguments> sortTestDataProvider() {
         return Stream.of(
                 Arguments.of(
@@ -88,4 +120,6 @@ class SelectionSortTest {
                 )
         );
     }
+
+
 }

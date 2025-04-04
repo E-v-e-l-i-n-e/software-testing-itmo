@@ -21,11 +21,11 @@ public class Main {
         Crew crew = new Crew(crewMembers, law, spaceship);
 
         List<Atom> atoms = Arrays.asList(
-                new Atom("Водород"),
-                new Atom("Кислород"),
-                new Atom("Водород")
+                new Atom("Водород", 2.0),
+                new Atom("Кислород", 16.0),
+                new Atom("Водород", 2.0)
         );
-        Molecule water = new Molecule(atoms);
+        Molecule water = new Molecule(atoms, 25.0);
 
         System.out.println("Корабль: " + spaceship.getName());
         System.out.println(spaceship.getEngineStatus());
