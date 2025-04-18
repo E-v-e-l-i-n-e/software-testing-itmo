@@ -18,11 +18,11 @@ public class Main {
 
     public static void outputCsv() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(CSV_FILE_PATH))) {
-            writer.println("x,y");
+            writer.println("x;y");
 
-            for (double x = -60.0; x <= 3.5; x += 0.0001) {
+            for (double x = -60.0; x <= 3.5; x += 0.01) {
                 double funcExpected = function(x, EPS);
-                writer.printf("%f,%f%n", x, funcExpected);
+                writer.printf("%f;%f%n", x, funcExpected);
                 if (x % 10 == 0)
                     System.out.println("Ура, осталось недолго!!!");
             }
